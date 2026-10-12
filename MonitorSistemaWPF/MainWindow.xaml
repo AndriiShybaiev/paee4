@@ -1,0 +1,91 @@
+<Window x:Class="MonitorSistemaWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MonitorSistemaWPF"
+        mc:Ignorable="d"
+        Title="Monitor de sistema" Height="680" Width="440" MinWidth="380" MinHeight="500">
+    <Window.DataContext>
+        <local:RecursosSistema />
+    </Window.DataContext>
+
+    <DockPanel Margin="10">
+        <!-- Bottom Action Buttons -->
+        <Border DockPanel.Dock="Bottom" Margin="0,10,0,0" Padding="5" BorderThickness="0,1,0,0" BorderBrush="#FFDDDDDD">
+            <UniformGrid Columns="3">
+                <Button Content="Iniciar" Command="{Binding IniciarCommand}" Style="{StaticResource botonAccion}" />
+                <Button Content="Parar" Command="{Binding PararCommand}" Style="{StaticResource botonAccion}" />
+                <Button Content="Reiniciar Máx" Command="{Binding ReiniciarMaximosCommand}" Style="{StaticResource botonAccion}" />
+            </UniformGrid>
+        </Border>
+
+        <!-- Main Content -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="0,0,5,0">
+                <!-- Header -->
+                <Grid Margin="0,0,0,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Monitor de actividad" FontSize="18" FontWeight="Bold" Foreground="#FF333333" />
+                        <TextBlock Text="{Binding Usuario, StringFormat=Usuario: {0}}" FontSize="12" Foreground="#FF666666" Margin="0,2,0,0" />
+                    </StackPanel>
+                    <Border Grid.Column="1" Background="#FFF0F0F0" CornerRadius="4" Padding="8,4" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding TextoEstado}" FontWeight="Bold" FontSize="12" Foreground="#FF333333" />
+                    </Border>
+                </Grid>
+
+                <!-- Section: Ordenador -->
+                <Label Content="Ordenador" Style="{StaticResource etiquetaTituloSeccion}" />
+                <Grid Margin="4,2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Label Content="Fabricante" Grid.Row="0" Grid.Column="0" Padding="2" />
+                    <Label Content="{Binding Fabricante}" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Padding="2" FontWeight="Medium" />
+
+                    <Label Content="Modelo" Grid.Row="1" Grid.Column="0" Padding="2" />
+                    <Label Content="{Binding Modelo}" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" Padding="2" FontWeight="Medium" />
+
+                    <Label Content="Procesador" Grid.Row="2" Grid.Column="0" Padding="2" />
+                    <Label Content="{Binding Procesador}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Padding="2" FontWeight="Medium" />
+                </Grid>
+
+                <!-- Section: CPU -->
+                <Label Content="CPU" Style="{StaticResource etiquetaTituloSeccion}" />
+                <ContentControl Content="{Binding Cpu}" ContentTemplate="{StaticResource plantillaMedida}" Margin="4,2" />
+
+                <!-- Section: Memoria -->
+                <Label Content="Memoria" Style="{StaticResource etiquetaTituloSeccion}" />
+                <StackPanel Margin="4,2">
+                    <ContentControl Content="{Binding MemoriaFisica}" ContentTemplate="{StaticResource plantillaMedida}" />
+                    <ContentControl Content="{Binding MemoriaVirtual}" ContentTemplate="{StaticResource plantillaMedida}" />
+                </StackPanel>
+
+                <!-- Section: Disco -->
+                <Label Content="Disco" Style="{StaticResource etiquetaTituloSeccion}" />
+                <StackPanel Margin="4,2">
+                    <TextBlock Text="{Binding DiscosLogicos, StringFormat=Discos lógicos: {0}}" Margin="2,2,2,4" FontSize="11" Foreground="#FF555555" TextWrapping="Wrap" />
+                    <ItemsControl ItemsSource="{Binding Discos}" ItemTemplate="{StaticResource plantillaMedida}" />
+                </StackPanel>
+
+                <!-- Section: Red -->
+                <Label Content="Red" Style="{StaticResource etiquetaTituloSeccion}" />
+                <StackPanel Margin="4,2">
+                    <ItemsControl ItemsSource="{Binding Red}" ItemTemplate="{StaticResource plantillaMedida}" />
+                </StackPanel>
+
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</Window>
