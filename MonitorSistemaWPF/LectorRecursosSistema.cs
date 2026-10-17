@@ -200,19 +200,29 @@ namespace MonitorSistema
         {
             string diskSpace = string.Empty;
             object device, space;
-            ManagementObjectSearcher objCS = new ManagementObjectSearcher("SELECT * FROM Win32_LogicalDisk");
-            foreach (ManagementObject objMgmt in objCS.Get())
+            try
             {
-                device = objMgmt["DeviceID"];       // C:
-                if (null != device)
+                ManagementObjectSearcher objCS = new ManagementObjectSearcher("SELECT * FROM Win32_LogicalDisk");
+                foreach (ManagementObject objMgmt in objCS.Get())
                 {
-                    space = objMgmt["FreeSpace"];   // C:10.32 GB, D:5.87GB
-                    if (null != space)
-                        diskSpace += device.ToString() + FormatBytes(double.Parse(space.ToString())) + ", ";
+                    device = objMgmt["DeviceID"];       // C:
+                    if (null != device)
+                    {
+                        space = objMgmt["FreeSpace"];   // C:10.32 GB, D:5.87GB
+                        if (null != space)
+                            diskSpace += device.ToString() + FormatBytes(double.Parse(space.ToString())) + ", ";
+                    }
+                }
+
+                if (diskSpace.Length >= 2)
+                {
+                    diskSpace = diskSpace.Substring(0, diskSpace.Length - 2);
                 }
             }
-
-            diskSpace = diskSpace.Substring(0, diskSpace.Length - 2);
+            catch
+            {
+                diskSpace = "No disponible";
+            }
             return diskSpace;
         }
 

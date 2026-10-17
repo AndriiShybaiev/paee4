@@ -27,7 +27,7 @@
             </Grid.ColumnDefinitions>
             <Label Content="{Binding Nombre}" Grid.Column="0" VerticalAlignment="Center" Padding="2" />
             <Label Content="{Binding ValorTexto}" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="2" FontWeight="SemiBold" />
-            <Label Content="{Binding ValorMaximoTexto, StringFormat=Máx: {0}}" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="#FF666666" Padding="6,2,2,2" FontSize="11" />
+            <Label Content="{Binding ValorMaximoTexto}" ContentStringFormat="Máx: {0}" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="#FF666666" Padding="6,2,2,2" FontSize="11" />
         </Grid>
     </DataTemplate>
 
@@ -40,7 +40,7 @@
             </Grid.ColumnDefinitions>
             <Label Content="{Binding Nombre}" Grid.Column="0" VerticalAlignment="Center" Padding="2" />
             <Label Content="{Binding ValorTexto}" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="2" FontWeight="SemiBold" />
-            <Label Content="{Binding ValorMaximoTexto, StringFormat=Máx: {0}}" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="#FF666666" Padding="6,2,2,2" FontSize="11" />
+            <Label Content="{Binding ValorMaximoTexto}" ContentStringFormat="Máx: {0}" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="#FF666666" Padding="6,2,2,2" FontSize="11" />
         </Grid>
     </DataTemplate>
 

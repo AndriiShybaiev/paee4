@@ -64,9 +64,9 @@ namespace MonitorSistemaWPF
                 DiscoLecturaEscritura
             };
 
-            RedRecibidos = new Medida("Paquetes recibidos", "{0:N0} B/s");
-            RedEnviados = new Medida("Paquetes enviados", "{0:N0} B/s");
-            RedRecibidosEnviados = new Medida("Recibidos/Enviados", "{0:N0} B/s");
+            RedRecibidos = new Medida("Datos recibidos", "{0:N0} B/s");
+            RedEnviados = new Medida("Datos enviados", "{0:N0} B/s");
+            RedRecibidosEnviados = new Medida("Total datos red", "{0:N0} B/s");
 
             Red = new ObservableCollection<Medida>
             {
@@ -81,10 +81,10 @@ namespace MonitorSistemaWPF
             };
             _timer.Tick += ManejadorTimer;
 
-            // Initialize commands
-            IniciarCommand = new ComandoIniciar(this);
-            PararCommand = new ComandoParar(this);
-            ReiniciarMaximosCommand = new ComandoReiniciarMaximos(this);
+            // Initialize commands using generalized RelayCommand
+            IniciarCommand = new RelayCommand(Iniciar, () => !EstaEjecutando);
+            PararCommand = new RelayCommand(Parar, () => EstaEjecutando);
+            ReiniciarMaximosCommand = new RelayCommand(ReiniciarMaximos);
 
             // Initial poll
             ActualizarMetricas();
@@ -211,16 +211,20 @@ namespace MonitorSistemaWPF
         {
             try
             {
-                Usuario = _lector.getUsuario();
-                Fabricante = _lector.getOrdenadorFabricante();
-                Modelo = _lector.getOrdenadorModelo();
+                Usuario = _lector.getUsuario() ?? "Desconocido";
+                Fabricante = _lector.getOrdenadorFabricante() ?? "Desconocido";
+                Modelo = _lector.getOrdenadorModelo() ?? "Desconocido";
                 var procesadores = _lector.getProcesadores();
                 Procesador = procesadores != null && procesadores.Length > 0 ? procesadores[0] : "Desconocido";
-                DiscosLogicos = _lector.getDiscosLogicos();
+                DiscosLogicos = _lector.getDiscosLogicos() ?? "Desconocido";
             }
             catch
             {
-                // Fallbacks in case of query failure
+                Usuario = Usuario ?? "Desconocido";
+                Fabricante = Fabricante ?? "Desconocido";
+                Modelo = Modelo ?? "Desconocido";
+                Procesador = Procesador ?? "Desconocido";
+                DiscosLogicos = DiscosLogicos ?? "Desconocido";
             }
         }
 
@@ -252,8 +256,8 @@ namespace MonitorSistemaWPF
                 double dEscritura = _lector.getDatosDisco(DiskData.Write);
                 DiscoEscritura.Valor = dEscritura;
 
-                double dLecturaEscritura = _lector.getDatosDisco(DiskData.ReadAndWrite);
-                DiscoLecturaEscritura.Valor = dLecturaEscritura;
+                // Total calculated from components of the same cycle
+                DiscoLecturaEscritura.Valor = dLectura + dEscritura;
 
                 double rRecibidos = _lector.getDatosRed(NetData.Received);
                 RedRecibidos.Valor = rRecibidos;
@@ -261,8 +265,8 @@ namespace MonitorSistemaWPF
                 double rEnviados = _lector.getDatosRed(NetData.Sent);
                 RedEnviados.Valor = rEnviados;
 
-                double rRecibidosEnviados = _lector.getDatosRed(NetData.ReceivedAndSent);
-                RedRecibidosEnviados.Valor = rRecibidosEnviados;
+                // Total calculated from components of the same cycle
+                RedRecibidosEnviados.Valor = rRecibidos + rEnviados;
 
                 DiscosLogicos = _lector.getDiscosLogicos();
             }

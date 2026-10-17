@@ -48,10 +48,11 @@ namespace MonitorSistemaWPF
                     _valor = value;
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(ValorTexto));
-                    if (_valor > _valorMaximo)
-                    {
-                        ValorMaximo = _valor;
-                    }
+                }
+
+                if (_valor > _valorMaximo)
+                {
+                    ValorMaximo = _valor;
                 }
             }
         }
